@@ -179,11 +179,31 @@
       input.value = direction === "in" ? "15,000" : "250,000";
       renderSend();
     });
+    // Last good rate from this browser, so a failed fetch still shows something recent.
+    try {
+      const saved = JSON.parse(localStorage.getItem("fs-rates") || "null");
+      if (saved && saved.USD && saved.GBP && saved.EUR) rates = saved;
+    } catch (_) {}
     renderSend();
-    fetch("https://api.frankfurter.dev/v1/latest?base=ZAR&symbols=USD,GBP,EUR", { cache: "no-store" })
-      .then((r) => r.ok ? r.json() : null)
-      .then((d) => { if (d && d.rates) { rates = d.rates; live = true; calc(); } })
-      .catch(() => {});
+    // Two free rate sources; the second is used when the first fails or is blocked.
+    const SOURCES = [
+      ["https://api.frankfurter.dev/v1/latest?base=ZAR&symbols=USD,GBP,EUR", (d) => d && d.rates],
+      ["https://open.er-api.com/v6/latest/ZAR", (d) => d && d.result === "success" && d.rates],
+    ];
+    const tryRates = (i) => {
+      if (i >= SOURCES.length) return;
+      const [url, pick] = SOURCES[i];
+      fetch(url, { cache: "no-store" })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => {
+          const r = pick(d);
+          if (!r || !r.USD || !r.GBP || !r.EUR) throw new Error("no rates");
+          rates = { USD: r.USD, GBP: r.GBP, EUR: r.EUR }; live = true; calc();
+          try { localStorage.setItem("fs-rates", JSON.stringify(rates)); } catch (_) {}
+        })
+        .catch(() => tryRates(i + 1));
+    };
+    tryRates(0);
   }
 
   /* Motion */
