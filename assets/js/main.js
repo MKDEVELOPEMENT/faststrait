@@ -39,6 +39,7 @@
     const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
     const verb = $("#eta-verb");
     const heroTop = $(".hero-top"), heroSide = $(".hero-side"), hero = heroSvg.parentElement;
+    const desktopHero = matchMedia("(min-width: 1081px)");
     // An element's box without its entrance transform, in viewport coordinates like getBoundingClientRect.
     const restingBox = (el) => {
       let x = 0, y = 0;
@@ -53,7 +54,8 @@
       // Layout offsets, not bounding rects, so the entrance animation doesn't skew the fit.
       // Lat 58 (the fit's top edge) sits well above London, so the box may tuck under the headline a little.
       extent: (W, H) => {
-        if (W <= 1080 || !heroTop || !heroSide) return [16, 16, W - 16, H - 16];
+        // Same test as the stylesheet's breakpoint (viewport width includes any scrollbar; W doesn't).
+        if (!desktopHero.matches || !heroTop || !heroSide) return [16, 16, W - 16, H - 16];
         return [Math.max(24, W * 0.03), heroTop.offsetTop + heroTop.offsetHeight - 28, heroSide.offsetLeft - 24, H - 48];
       },
       avoid: () => [$(".eta"), $(".hero-top .display"), $(".why"), $(".send")].filter(Boolean).map(restingBox),

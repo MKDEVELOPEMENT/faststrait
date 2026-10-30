@@ -89,15 +89,18 @@ input { caret-color: var(--teal-ink); }
 .menu-open .burger span::before { transform: translateY(6px) rotate(45deg); }
 .menu-open .burger span::after { transform: translateY(-6px) rotate(-45deg); }
 
-/* Chart hero: full-bleed chart, corridor fitted left, copy column right */
-/* Desktop hero: headline across the top-left, the corridor below it, the estimate card on the right over open ocean. */
-.hero { --edge: max(clamp(24px, 4.5vw, 72px), calc((100vw - 1520px) / 2)); --side: min(34vw, 440px); position: relative; min-height: max(800px, min(100svh, 960px)); background: var(--water); overflow: hidden; }
-.hero > .chart { position: absolute; inset: 0; width: 100%; height: 100%; }
-.hero::after { content: ""; position: absolute; top: 0; bottom: 0; right: 0; width: min(40vw, 580px); background: linear-gradient(90deg, rgba(214, 234, 229, 0) 0%, rgba(214, 234, 229, 0.8) 34%, var(--water) 64%); pointer-events: none; }
-.hero-top { position: absolute; z-index: 2; top: 112px; left: var(--edge); right: calc(var(--edge) + var(--side) + 32px); }
-.hero-top .display { font-size: clamp(40px, calc((100vw - 580px) / 12.8), 70px); text-wrap: balance; } /* "South Africa to the world," fits beside the card column */
+/* Desktop hero: a grid over a full-bleed chart. Headline top-left, estimate card in a right column over open
+   ocean, and the corridor fitted (in main.js) below the headline. The grid lets the hero grow with its content,
+   so nothing is clipped on short or narrow screens. */
+.hero { --edge: max(clamp(24px, 4.5vw, 72px), calc((100% - 1520px) / 2)); --side: min(34vw, 440px); position: relative; display: grid; grid-template-columns: minmax(0, 1fr) var(--side); column-gap: 32px; align-items: start; align-content: start; min-height: max(800px, min(100svh, 960px)); padding: 112px var(--edge) 48px; background: var(--water); overflow: hidden; }
+.hero > .chart { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+.hero::after { content: ""; position: absolute; top: 0; bottom: 0; right: 0; width: min(40vw, 580px); background: linear-gradient(90deg, rgba(214, 234, 229, 0) 0%, rgba(214, 234, 229, 0.8) 34%, var(--water) 64%); pointer-events: none; z-index: 1; }
+.hero-top { position: relative; z-index: 2; grid-column: 1; container-type: inline-size; }
+/* Sized from the headline's own box, so a visible scrollbar can't push "world," onto a third line.
+   The first line measures 12.7em; 13.4 leaves room. The vw value is for browsers without container units. */
+.hero-top .display { font-size: clamp(40px, calc((100vw - 620px) / 13.4), 70px); font-size: clamp(36px, calc(100cqi / 13.4), 70px); text-wrap: balance; }
 .hero-top .display span { display: block; }
-.hero-side { position: absolute; z-index: 2; top: 112px; right: var(--edge); width: var(--side); display: flex; flex-direction: column; gap: 20px; }
+.hero-side { position: relative; z-index: 2; grid-column: 2; display: flex; flex-direction: column; gap: 20px; }
 .why { display: grid; gap: 10px; }
 .why li { display: grid; grid-template-columns: 7.2em 1fr; gap: 12px; align-items: baseline; font-size: 15.5px; line-height: 1.4; color: var(--ink-2); }
 .why b { font-size: 21px; font-weight: 750; letter-spacing: -0.02em; font-stretch: 108%; color: var(--teal-deep); }
@@ -348,12 +351,12 @@ input { caret-color: var(--teal-ink); }
   .step { grid-template-columns: 90px 1fr; }
   .step .frame { grid-column: 2; }
   .controls { grid-template-columns: 1fr 1fr; }
-  .hero { display: flex; flex-direction: column; min-height: 0; }
+  .hero { display: flex; flex-direction: column; min-height: 0; padding: 0; }
   .hero::after { display: none; }
-  .hero-top { position: relative; inset: auto; padding: 104px var(--pad) 0; order: 1; }
+  .hero-top { padding: 104px var(--pad) 0; order: 1; }
   .hero-top .display { font-size: clamp(38px, 6.4vw, 64px); }
   .hero-top .display span { display: inline; }
-  .hero-side { position: relative; inset: auto; width: auto; max-width: 560px; padding: 24px var(--pad) 28px; order: 2; }
+  .hero-side { max-width: 560px; padding: 24px var(--pad) 28px; order: 2; }
   .hero > .chart { position: relative; inset: auto; height: 420px; order: 3; }
   .eta { left: var(--pad); bottom: 20px; }
 }
