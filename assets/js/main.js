@@ -6,6 +6,7 @@
   const FALLBACK_EMAIL = "info@faststrait.com";
   // Indicative fee shown in the send panel. Change when pricing is final.
   const FEE_RATE = 0.006;
+  const BANK_MARGIN = 0.014; // FSB 2025 global average FX margin for business payments
   const FALLBACK_RATES = { USD: 0.0572, GBP: 0.0428, EUR: 0.0495 }; // per 1 ZAR
 
   const $ = (s, r = document) => r.querySelector(s);
@@ -37,15 +38,25 @@
     const clock = $("#eta-clock"), from = $("#eta-from"), to = $("#eta-to");
     const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
     const verb = $("#eta-verb");
-    FSChart(heroSvg, {
+    const heroTop = $(".hero-top"), heroSide = $(".hero-side"), hero = heroSvg.parentElement;
+    // An element's box without its entrance transform, in viewport coordinates like getBoundingClientRect.
+    const restingBox = (el) => {
+      let x = 0, y = 0;
+      for (let n = el; n && n !== hero; n = n.offsetParent) { x += n.offsetLeft; y += n.offsetTop; }
+      const h = hero.getBoundingClientRect();
+      return { left: h.left + x, top: h.top + y, right: h.left + x + el.offsetWidth, bottom: h.top + y + el.offsetHeight };
+    };
+    const heroChart = FSChart(heroSvg, {
       sail: !reduce,
       labels: true,
+      // Desktop: routes start just under the headline and stop short of the card column.
+      // Layout offsets, not bounding rects, so the entrance animation doesn't skew the fit.
+      // Lat 58 (the fit's top edge) sits well above London, so the box may tuck under the headline a little.
       extent: (W, H) => {
-        if (W < 900) return [16, 16, W - 16, H - 16];
-        const col = Math.min(W * 0.4, 520);
-        return [Math.max(24, W * 0.03), 92, W - col - 24, H - 84];
+        if (W <= 1080 || !heroTop || !heroSide) return [16, 16, W - 16, H - 16];
+        return [Math.max(24, W * 0.03), heroTop.offsetTop + heroTop.offsetHeight - 28, heroSide.offsetLeft - 24, H - 48];
       },
-      avoid: () => [$(".eta"), $(".hero-copy .display"), $(".hero-copy .lead"), $(".send")].filter(Boolean).map((el) => el.getBoundingClientRect()),
+      avoid: () => [$(".eta"), $(".hero-top .display"), $(".why"), $(".send")].filter(Boolean).map(restingBox),
       onLeg: (a, b) => { if (from) from.textContent = a.name; if (to) to.textContent = b.name; if (verb) verb.textContent = "arriving in"; },
       onTick: (e) => {
         if (clock) clock.textContent = fmt((1 - e) * 252); // 4 min 12 s per crossing, counting down
@@ -53,6 +64,8 @@
       },
     });
     if (reduce) { if (clock) clock.textContent = "4:12"; if (verb) verb.textContent = "arrived in"; }
+    // The headline's height settles once the web font loads.
+    if (document.fonts && heroChart.refit) document.fonts.ready.then(heroChart.refit);
   }
   // Smaller charts (partners page)
   $$("[data-chart]").forEach((el) => {
@@ -150,6 +163,10 @@
     $("#recv").textContent = num(out);
     $("#q-rate").textContent = `1 ${foreign} = R ${(1 / r).toFixed(4)}`;
     $("#q-fee").textContent = `${sym[sendCode]} ${num(fee)}`;
+    // Bank comparison, as in the cost section: published tariff (0.502%, capped at R760, plus R122)
+    // and the 1.4% average FX margin. Incoming payments count the margin only.
+    const bank = direction === "out" ? Math.min(amount * 0.00502, 760) + 122 + amount * BANK_MARGIN : amount * BANK_MARGIN;
+    $("#q-save").textContent = `${sym[sendCode]} ${num(Math.max(bank - fee, 0))}`;
     $("#rate-src").textContent = live ? "Live mid-market rate" : "Indicative rate";
   };
   const renderSend = () => {
@@ -209,7 +226,7 @@
   /* Motion */
   if (hasGsap && !reduce) {
     gsap.registerPlugin(ScrollTrigger);
-    if ($(".hero-copy")) gsap.fromTo(".hero-copy > *", { y: 22, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "power3.out", stagger: 0.12, delay: 0.15 });
+    if ($(".hero-top")) gsap.fromTo(".hero-top > *, .hero-side > *", { y: 22, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "power3.out", stagger: 0.12, delay: 0.15 });
     if ($(".eta")) gsap.fromTo(".eta", { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: "power3.out", delay: 0.8 });
     if ($(".page-hero")) gsap.fromTo(".page-hero .container > *", { y: 22, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "power3.out", stagger: 0.1, delay: 0.15 });
 
@@ -221,7 +238,7 @@
     // Cost stacks
     $$(".cost-stack").forEach((st) => gsap.to(st.querySelectorAll("i"), { scaleX: 1, duration: 1.2, ease: "power3.out", stagger: 0.15, scrollTrigger: { trigger: st, start: "top 85%", once: true } }));
   } else {
-    $$(".rv, [data-stagger] > *, .hero-copy > *, .eta").forEach((el) => (el.style.opacity = 1));
+    $$(".rv, [data-stagger] > *, .hero-top > *, .hero-side > *, .eta").forEach((el) => (el.style.opacity = 1));
     $$(".bar, .cost-stack i").forEach((el) => (el.style.transform = "none"));
   }
 

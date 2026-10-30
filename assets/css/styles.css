@@ -90,12 +90,17 @@ input { caret-color: var(--teal-ink); }
 .menu-open .burger span::after { transform: translateY(-6px) rotate(-45deg); }
 
 /* Chart hero: full-bleed chart, corridor fitted left, copy column right */
-.hero { position: relative; min-height: min(100svh, 940px); background: var(--water); overflow: hidden; }
+/* Desktop hero: headline across the top-left, the corridor below it, the estimate card on the right over open ocean. */
+.hero { --edge: max(clamp(24px, 4.5vw, 72px), calc((100vw - 1520px) / 2)); --side: min(34vw, 440px); position: relative; min-height: max(800px, min(100svh, 960px)); background: var(--water); overflow: hidden; }
 .hero > .chart { position: absolute; inset: 0; width: 100%; height: 100%; }
-.hero::after { content: ""; position: absolute; top: 0; bottom: 0; right: 0; width: min(46vw, 640px); background: linear-gradient(90deg, rgba(214, 234, 229, 0) 0%, rgba(214, 234, 229, 0.86) 30%, var(--water) 60%); pointer-events: none; }
-.hero-copy { position: absolute; z-index: 2; top: 0; bottom: 0; right: 0; width: min(40vw, 520px); padding: 104px clamp(20px, 4vw, 64px) 32px 0; display: flex; flex-direction: column; justify-content: center; gap: 16px; }
-.hero-copy .display { font-size: clamp(36px, 3.5vw, 56px); }
-.hero-copy .lead { font-size: clamp(16px, 1.25vw, 18px); }
+.hero::after { content: ""; position: absolute; top: 0; bottom: 0; right: 0; width: min(40vw, 580px); background: linear-gradient(90deg, rgba(214, 234, 229, 0) 0%, rgba(214, 234, 229, 0.8) 34%, var(--water) 64%); pointer-events: none; }
+.hero-top { position: absolute; z-index: 2; top: 112px; left: var(--edge); right: calc(var(--edge) + var(--side) + 32px); }
+.hero-top .display { font-size: clamp(40px, calc((100vw - 580px) / 12.8), 70px); text-wrap: balance; } /* "South Africa to the world," fits beside the card column */
+.hero-top .display span { display: block; }
+.hero-side { position: absolute; z-index: 2; top: 112px; right: var(--edge); width: var(--side); display: flex; flex-direction: column; gap: 20px; }
+.why { display: grid; gap: 10px; }
+.why li { display: grid; grid-template-columns: 7.2em 1fr; gap: 12px; align-items: baseline; font-size: 15.5px; line-height: 1.4; color: var(--ink-2); }
+.why b { font-size: 21px; font-weight: 750; letter-spacing: -0.02em; font-stretch: 108%; color: var(--teal-deep); }
 .page-hero .chart { position: absolute; inset: 0; width: 100%; height: 100%; }
 .chart text { font-family: var(--font); }
 .chart .graticule { fill: none; stroke: rgba(12, 27, 42, 0.1); stroke-width: 1; }
@@ -131,6 +136,9 @@ input { caret-color: var(--teal-ink); }
 .send-meta span:first-child { color: var(--ink-soft); }
 .send-meta b { font-weight: 600; }
 .send-meta .fast { color: var(--teal-ink); font-weight: 700; }
+.send-meta .save { margin-top: 4px; padding: 7px 10px; border-radius: 9px; background: rgba(60, 224, 181, 0.2); }
+.send-meta .save span:first-child { color: var(--ink); font-weight: 600; }
+.send-meta .save b { color: var(--teal-deep); font-weight: 750; }
 .send .btn { width: 100%; margin-top: 14px; height: 48px; }
 .send-note { margin-top: 10px; font-size: 12.5px; color: var(--ink-soft); line-height: 1.4; }
 .swap-row { display: flex; justify-content: flex-end; margin: -6px 8px -6px 0; position: relative; z-index: 1; }
@@ -342,8 +350,11 @@ input { caret-color: var(--teal-ink); }
   .controls { grid-template-columns: 1fr 1fr; }
   .hero { display: flex; flex-direction: column; min-height: 0; }
   .hero::after { display: none; }
-  .hero-copy { position: relative; width: auto; padding: 104px var(--pad) 28px; order: 1; }
-  .hero > .chart { position: relative; inset: auto; height: 420px; order: 2; }
+  .hero-top { position: relative; inset: auto; padding: 104px var(--pad) 0; order: 1; }
+  .hero-top .display { font-size: clamp(38px, 6.4vw, 64px); }
+  .hero-top .display span { display: inline; }
+  .hero-side { position: relative; inset: auto; width: auto; max-width: 560px; padding: 24px var(--pad) 28px; order: 2; }
+  .hero > .chart { position: relative; inset: auto; height: 420px; order: 3; }
   .eta { left: var(--pad); bottom: 20px; }
 }
 @media (max-width: 900px) {
@@ -366,7 +377,9 @@ input { caret-color: var(--teal-ink); }
 @media (max-width: 600px) {
   body { font-size: 16px; }
   .header-actions .btn-ink { display: none; }
-  .hero-copy { padding-top: 92px; }
+  .hero-top { padding-top: 92px; }
+  .why li { grid-template-columns: 6.6em 1fr; font-size: 15px; }
+  .why b { font-size: 19px; }
   .eta { font-size: 13.5px; gap: 10px; padding: 10px 12px; }
   .step { grid-template-columns: 1fr; }
   .step .frame { grid-column: 1; }

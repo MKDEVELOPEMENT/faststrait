@@ -195,6 +195,7 @@
       // For overlays that animate on top of the chart (the explainer's journey scene).
       project: (lon, lat) => projection([lon, lat]),
       port: (k) => PORTS[k],
+      refit: render,
       ready: loadLand(),
     };
   };
