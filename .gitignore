@@ -1,0 +1,8 @@
+# Internal working files: not part of the public site
+*.md
+.impeccable/
+.claude/
+firebase.json
+.firebaserc
+firebase-debug.log
+.DS_Store
