@@ -101,10 +101,83 @@ input { caret-color: var(--teal-ink); }
 .hero-top .display { font-size: clamp(40px, calc((100vw - 620px) / 13.4), 70px); font-size: clamp(36px, calc(100cqi / 13.4), 70px); text-wrap: balance; }
 .hero-top .display span { display: block; }
 .hero-side { position: relative; z-index: 2; grid-column: 2; display: flex; flex-direction: column; gap: 20px; }
-.why { display: grid; gap: 10px; }
-.why li { display: grid; grid-template-columns: 7.2em 1fr; gap: 12px; align-items: baseline; font-size: 15.5px; line-height: 1.4; color: var(--ink-2); }
-.why b { font-size: 21px; font-weight: 750; letter-spacing: -0.02em; font-stretch: 108%; color: var(--teal-deep); }
 .page-hero .chart { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* Cheaper, faster, easier: three proofs, each with its own small working picture. The middle one is dark so
+   the row reads as one composed piece, not three identical cards. */
+.proof { background: var(--paper); padding: clamp(40px, 5vw, 72px) 0; }
+.proof-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.pf { border-radius: 22px; padding: clamp(22px, 2.2vw, 32px); background: #fff; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.pf-speed { background: var(--ink); color: var(--paper); }
+.pf h3 { font-size: clamp(36px, 3.3vw, 50px); font-weight: 750; letter-spacing: -0.035em; line-height: 1; font-stretch: 112%; }
+.pf h3 i { font-style: normal; color: var(--teal); }
+.pf p { margin-top: 12px; font-size: 16px; line-height: 1.5; color: var(--ink-2); max-width: 30em; }
+.pf-speed p { color: rgba(241, 246, 244, 0.74); }
+.pf-stage { margin-top: auto; background: var(--water); border-radius: 14px; padding: 18px; display: grid; gap: 12px; min-height: 150px; align-content: center; }
+.pf-speed .pf-stage { background: rgba(255, 255, 255, 0.07); }
+.pf-row { display: grid; grid-template-columns: 5.4em minmax(0, 1fr) 4.6em; gap: 10px; align-items: center; font-size: 14px; }
+.pf-row > span:first-child { color: var(--ink-soft); font-weight: 600; }
+.pf-row b { font-size: 15px; font-weight: 700; text-align: right; white-space: nowrap; }
+.pf-speed .pf-row > span:first-child { color: rgba(241, 246, 244, 0.66); }
+.pf-speed .pf-row b { color: #fff; }
+.pf-speed .pf-row b.pf-fs-t { color: var(--teal); }
+.pf-track { display: block; height: 12px; border-radius: 6px; background: rgba(12, 27, 42, 0.08); overflow: hidden; }
+.pf-speed .pf-track { background: rgba(255, 255, 255, 0.12); }
+.pf-bar, .pf-fill { display: block; height: 100%; border-radius: 6px; width: calc(var(--w, 1) * 100%); transform-origin: left center; }
+.pf-bar.bank { background: var(--ink-soft); }
+.pf-bar.fs { background: var(--teal-ink); }
+.pf-fill.bank { background: var(--sand); }
+.pf-fill.fs { background: var(--teal); }
+.pf small { font-size: 12.5px; color: var(--ink-soft); }
+.pf-speed small { color: rgba(241, 246, 244, 0.56); }
+.pf-flow { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; }
+.pf-end { display: grid; justify-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--ink-soft); white-space: nowrap; }
+.pf-end b { display: grid; place-items: center; min-width: 48px; height: 48px; padding: 0 14px; border-radius: 999px; background: #fff; color: var(--ink); font-size: 17px; font-weight: 750; }
+.pf-end.far b { background: var(--ink); color: var(--teal); }
+.pf-rail { position: relative; display: block; height: 0; border-top: 3px dashed rgba(12, 27, 42, 0.32); margin-bottom: 20px; }
+.pf-token { position: absolute; top: -10px; left: calc(100% - 17px); width: 17px; height: 17px; border-radius: 50%; background: var(--teal); border: 3px solid var(--ink); animation: pf-travel 3.2s cubic-bezier(0.6, 0, 0.3, 1) infinite; }
+@keyframes pf-travel { 0%, 12% { left: 0; } 62%, 100% { left: calc(100% - 17px); } }
+.pf-checks { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13.5px; font-weight: 600; color: var(--ink-2); }
+.pf-checks li::before { content: ""; display: inline-block; width: 9px; height: 5px; margin-right: 8px; border-left: 2.5px solid var(--teal-ink); border-bottom: 2.5px solid var(--teal-ink); transform: translateY(-3px) rotate(-45deg); }
+.pf-link { align-self: flex-start; font-size: 15px; font-weight: 650; color: var(--teal-ink); text-decoration: none; }
+.pf-link::after { content: " \2192"; }
+.pf-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+.pf-speed .pf-link { color: var(--teal); }
+@media (max-width: 1180px) {
+  .proof-grid { grid-template-columns: minmax(0, 1fr); }
+  .pf { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); grid-template-areas: "copy stage" "link stage"; column-gap: clamp(20px, 4vw, 48px); row-gap: 16px; align-items: start; }
+  .pf-copy { grid-area: copy; } .pf-stage { grid-area: stage; margin-top: 0; } .pf-link { grid-area: link; align-self: end; }
+}
+@media (max-width: 640px) {
+  .pf { display: flex; }
+}
+@media (prefers-reduced-motion: reduce) { .pf-token { animation: none; } }
+
+/* Mid widths (half to three-quarters of a laptop): headline across the top, card on the right,
+   the corridor fitted beside the card. Must match the breakpoint in main.js. */
+@media (max-width: 1080px) {
+  .hero { --side: min(44vw, 400px); grid-template-columns: minmax(0, 1fr) var(--side); padding: 104px var(--pad) 40px; min-height: 760px; }
+  .hero::after { width: min(54vw, 500px); }
+  .hero-top { grid-column: 1 / -1; }
+  .hero-top .display { font-size: clamp(36px, calc(100cqi / 13.4), 64px); }
+  .hero-side { grid-column: 2; margin-top: 28px; }
+  .hero .eta { left: var(--pad); bottom: 20px; }
+}
+/* Narrow: stacked headline, card, then the map. */
+@media (max-width: 820px) {
+  .hero { display: flex; flex-direction: column; align-items: stretch; min-height: 0; padding: 0; }
+  .hero::after { display: none; }
+  .hero-top { container-type: normal; padding: 104px var(--pad) 0; order: 1; }
+  .hero-top .display { font-size: clamp(36px, 8.4vw, 60px); }
+  .hero-top .display span { display: inline; }
+  .hero-side { margin-top: 0; max-width: 560px; padding: 24px var(--pad) 28px; order: 2; }
+  .hero-side .send { max-width: 560px; }
+  .hero > .chart { position: relative; inset: auto; height: 400px; order: 3; }
+}
+@media (max-width: 600px) {
+  .hero-top { padding-top: 92px; }
+  .hero > .chart { height: 340px; }
+  .hero .eta { font-size: 13.5px; gap: 10px; padding: 10px 12px; }
+}
 .chart text { font-family: var(--font); }
 .chart .graticule { fill: none; stroke: rgba(12, 27, 42, 0.1); stroke-width: 1; }
 .chart .land { fill: var(--land); stroke: rgba(12, 27, 42, 0.3); stroke-width: 0.8; }
@@ -351,14 +424,6 @@ input { caret-color: var(--teal-ink); }
   .step { grid-template-columns: 90px 1fr; }
   .step .frame { grid-column: 2; }
   .controls { grid-template-columns: 1fr 1fr; }
-  .hero { display: flex; flex-direction: column; min-height: 0; padding: 0; }
-  .hero::after { display: none; }
-  .hero-top { padding: 104px var(--pad) 0; order: 1; }
-  .hero-top .display { font-size: clamp(38px, 6.4vw, 64px); }
-  .hero-top .display span { display: inline; }
-  .hero-side { max-width: 560px; padding: 24px var(--pad) 28px; order: 2; }
-  .hero > .chart { position: relative; inset: auto; height: 420px; order: 3; }
-  .eta { left: var(--pad); bottom: 20px; }
 }
 @media (max-width: 900px) {
   .nav, .header-actions .btn-quiet { display: none; }
@@ -380,10 +445,6 @@ input { caret-color: var(--teal-ink); }
 @media (max-width: 600px) {
   body { font-size: 16px; }
   .header-actions .btn-ink { display: none; }
-  .hero-top { padding-top: 92px; }
-  .why li { grid-template-columns: 6.6em 1fr; font-size: 15px; }
-  .why b { font-size: 19px; }
-  .eta { font-size: 13.5px; gap: 10px; padding: 10px 12px; }
   .step { grid-template-columns: 1fr; }
   .step .frame { grid-column: 1; }
   .step .n { font-size: 64px; }
@@ -397,7 +458,6 @@ input { caret-color: var(--teal-ink); }
 .cost-col li b { white-space: nowrap; }
 .m-only { display: none; }
 @media (max-width: 900px) {
-  .hero > .chart { height: 360px; }
   .menu-open .nav .m-only { display: block; }
 }
 

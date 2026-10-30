@@ -127,7 +127,10 @@
         if (o.labels && W > 360 && !blocked(p[0], p[1])) {
           // Preferred placement, then below the point, then above; skip if all collide with copy.
           const tries = [[p[0] + (pt.dx || 10), p[1] + (pt.dy || 4), pt.anchor || "start"], [p[0], p[1] + 24, "middle"], [p[0], p[1] - 16, "middle"]];
-          const spot = tries.find(([x, y]) => !blocked(x, y) && !blocked(x - 40, y) && !blocked(x + 40, y));
+          // Also keep the label inside the chart (width estimated from the uppercase name).
+          const tw = pt.name.length * 9.6;
+          const onChart = ([x, , a]) => { const l = a === "end" ? x - tw : a === "middle" ? x - tw / 2 : x; return l >= 6 && l + tw <= W - 6; };
+          const spot = tries.find((t) => onChart(t) && !blocked(t[0], t[1]) && !blocked(t[0] - 40, t[1]) && !blocked(t[0] + 40, t[1]));
           if (spot) gPorts.append("text").attr("class", "label").attr("x", spot[0]).attr("y", spot[1]).attr("text-anchor", spot[2]).text(pt.name.toUpperCase());
         }
       });

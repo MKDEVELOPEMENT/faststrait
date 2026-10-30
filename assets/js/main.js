@@ -39,7 +39,7 @@
     const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
     const verb = $("#eta-verb");
     const heroTop = $(".hero-top"), heroSide = $(".hero-side"), hero = heroSvg.parentElement;
-    const desktopHero = matchMedia("(min-width: 1081px)");
+    const desktopHero = matchMedia("(min-width: 821px)");
     // An element's box without its entrance transform, in viewport coordinates like getBoundingClientRect.
     const restingBox = (el) => {
       let x = 0, y = 0;
@@ -58,7 +58,7 @@
         if (!desktopHero.matches || !heroTop || !heroSide) return [16, 16, W - 16, H - 16];
         return [Math.max(24, W * 0.03), heroTop.offsetTop + heroTop.offsetHeight - 28, heroSide.offsetLeft - 24, H - 48];
       },
-      avoid: () => [$(".eta"), $(".hero-top .display"), $(".why"), $(".send")].filter(Boolean).map(restingBox),
+      avoid: () => [$(".eta"), $(".hero-top .display"), $(".send")].filter(Boolean).map(restingBox),
       onLeg: (a, b) => { if (from) from.textContent = a.name; if (to) to.textContent = b.name; if (verb) verb.textContent = "arriving in"; },
       onTick: (e) => {
         if (clock) clock.textContent = fmt((1 - e) * 252); // 4 min 12 s per crossing, counting down
@@ -239,6 +239,15 @@
     $$(".bar").forEach((b) => gsap.to(b, { scaleX: 1, duration: 1.4, ease: "power3.out", scrollTrigger: { trigger: b, start: "top 85%", once: true } }));
     // Cost stacks
     $$(".cost-stack").forEach((st) => gsap.to(st.querySelectorAll("i"), { scaleX: 1, duration: 1.2, ease: "power3.out", stagger: 0.15, scrollTrigger: { trigger: st, start: "top 85%", once: true } }));
+    // Proof band: bank vs FastStrait cost bars grow in; the speed race runs FastStrait's 4:12 while the bank barely starts.
+    if ($(".pf-cost")) gsap.fromTo(".pf-bar", { scaleX: 0 }, { scaleX: 1, duration: 1.2, ease: "power3.out", stagger: 0.2, scrollTrigger: { trigger: ".pf-cost", start: "top 85%", once: true } });
+    const fsT = $(".pf-fs-t");
+    if (fsT) {
+      const race = { s: 0 };
+      gsap.timeline({ scrollTrigger: { trigger: ".pf-speed", start: "top 85%", once: true } })
+        .fromTo(".pf-speed .pf-fill", { scaleX: 0 }, { scaleX: 1, duration: 2.6, ease: "none" }, 0)
+        .fromTo(race, { s: 0 }, { s: 252, duration: 2.6, ease: "none", onUpdate: () => (fsT.textContent = `${Math.floor(race.s / 60)}:${String(Math.floor(race.s % 60)).padStart(2, "0")}`) }, 0);
+    }
   } else {
     $$(".rv, [data-stagger] > *, .hero-top > *, .hero-side > *, .eta").forEach((el) => (el.style.opacity = 1));
     $$(".bar, .cost-stack i").forEach((el) => (el.style.transform = "none"));

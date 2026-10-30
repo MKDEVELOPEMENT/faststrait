@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=859711fe">
+  <link rel="stylesheet" href="assets/css/styles.css?v=4a3fc53a">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Organization","name":"FastStrait","url":"https://faststrait.com","email":"info@faststrait.com","description":"Cross-border payments between South Africa and the US, UK and EU.","areaServed":["ZA","US","GB","EU"]}
   </script>
@@ -55,11 +55,6 @@
         <h1 class="display"><span>South Africa to the world,</span> <span>and back. In minutes.</span></h1>
       </div>
       <div class="hero-side">
-        <ul class="why">
-          <li><b>Cheaper.</b><span>One fee, less than half what a bank typically charges.</span></li>
-          <li><b>Faster.</b><span>Minutes, not days, in both directions.</span></li>
-          <li><b>Easier.</b><span>Pay or get paid in the US, UK and Europe, straight from rand.</span></li>
-        </ul>
       <form class="send" id="send" aria-label="Transfer estimate" onsubmit="return false">
           <div class="send-head"><h2 id="send-title">Pay a supplier abroad</h2><span id="rate-src">Indicative rate</span></div>
           <div class="send-field">
@@ -93,6 +88,54 @@
         <b><span id="eta-from">Cape Town</span> to <span id="eta-to">New York</span></b>
         <span id="eta-verb">arriving in</span>
         <span class="clock" id="eta-clock">0:00</span>
+      </div>
+    </section>
+
+    <!-- Cheaper, faster, easier -->
+    <section class="proof" aria-labelledby="proof-title">
+      <div class="container">
+        <h2 class="sr-only" id="proof-title">Why FastStrait</h2>
+        <div class="proof-grid" data-stagger>
+          <article class="pf pf-cost">
+            <div class="pf-copy">
+              <h3>Cheaper<i>.</i></h3>
+              <p>One fee, less than half what a bank typically charges. No margin hidden in the rate.</p>
+            </div>
+            <div class="pf-stage" aria-hidden="true">
+              <div class="pf-row"><span>Bank</span><span class="pf-track"><i class="pf-bar bank"></i></span><b>R 4,382</b></div>
+              <div class="pf-row"><span>FastStrait</span><span class="pf-track"><i class="pf-bar fs" style="--w: 0.342;"></i></span><b>R 1,500</b></div>
+              <small>Cost of sending R 250,000 to the US</small>
+            </div>
+            <a class="pf-link" href="#cost">See the breakdown</a>
+          </article>
+          <article class="pf pf-speed">
+            <div class="pf-copy">
+              <h3>Faster<i>.</i></h3>
+              <p>Minutes, not days, whether you're paying out or getting paid.</p>
+            </div>
+            <div class="pf-stage" aria-hidden="true">
+              <div class="pf-row"><span>Bank</span><span class="pf-track"><i class="pf-fill bank" style="--w: 0.08;"></i></span><b class="pf-bank-t">Day 1 of 5</b></div>
+              <div class="pf-row"><span>FastStrait</span><span class="pf-track"><i class="pf-fill fs"></i></span><b class="pf-fs-t">4:12</b></div>
+              <small>Both sent Monday at 09:41</small>
+            </div>
+            <a class="pf-link" href="#speed">Watch the week</a>
+          </article>
+          <article class="pf pf-easy">
+            <div class="pf-copy">
+              <h3>Easier<i>.</i></h3>
+              <p>Pay or get paid in the US, UK and Europe, straight from your rand account.</p>
+            </div>
+            <div class="pf-stage" aria-hidden="true">
+              <div class="pf-flow">
+                <span class="pf-end"><b>R</b>Your rand</span>
+                <span class="pf-rail"><i class="pf-token"></i></span>
+                <span class="pf-end far"><b>$ £ €</b>Their bank</span>
+              </div>
+              <ul class="pf-checks"><li>No foreign account</li><li>No new bank</li><li>Nothing to learn</li></ul>
+            </div>
+            <a class="pf-link" href="#how">How it works</a>
+          </article>
+        </div>
       </div>
     </section>
 
@@ -415,8 +458,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-  <script src="assets/js/chart.js?v=10857c99" defer></script>
-  <script src="assets/js/main.js?v=942d6d5c" defer></script>
+  <script src="assets/js/chart.js?v=ec420854" defer></script>
+  <script src="assets/js/main.js?v=f2d031e7" defer></script>
   <script src="assets/js/film.js?v=d4d95303" defer></script>
 </body>
 </html>
